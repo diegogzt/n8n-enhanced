@@ -16,6 +16,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY turbo.json ./
 COPY patches ./patches
+COPY scripts ./scripts
 COPY packages ./packages
 
 # Install pnpm
