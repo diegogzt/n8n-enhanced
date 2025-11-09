@@ -23,7 +23,11 @@ COPY packages ./packages
 RUN npm install -g pnpm@10.18.3
 
 # Install dependencies and build
-RUN pnpm install --frozen-lockfile --ignore-scripts
+# Disable prepare script (lefthook) which requires .git directory
+RUN echo "ignore-scripts=false" > .npmrc && \
+    echo "enable-pre-post-scripts=false" >> .npmrc && \
+    pnpm install --frozen-lockfile && \
+    rm .npmrc
 RUN pnpm build
 
 # Production stage
