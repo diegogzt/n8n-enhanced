@@ -1,6 +1,7 @@
 # 🚀 Guía de Instalación - n8n Enhanced Edition
 
 ## 📋 Tabla de Contenidos
+
 - [Instalación con Docker Compose (Recomendado)](#instalación-con-docker-compose-recomendado)
 - [Instalación con Docker](#instalación-con-docker)
 - [Instalación Manual](#instalación-manual)
@@ -13,6 +14,7 @@
 ## 📦 Instalación con Docker Compose (Recomendado)
 
 ### Requisitos Previos
+
 - Docker 20.10 o superior
 - Docker Compose v2.0 o superior
 - 4GB RAM mínimo (8GB recomendado)
@@ -145,6 +147,7 @@ docker run -d \
 ## 🔧 Instalación Manual (Desarrollo)
 
 ### Requisitos
+
 - Node.js 20.x
 - pnpm 9.9.0
 - PostgreSQL 14+ (opcional, puede usar SQLite)
@@ -344,6 +347,7 @@ netstat -ano | findstr :5678  # Windows
 Esto NO debería suceder en n8n Enhanced. Si lo ves:
 
 1. Verifica que estás usando la imagen correcta:
+
    ```bash
    docker inspect n8n-enhanced | grep Image
    ```
@@ -442,6 +446,7 @@ docker-compose logs -f n8n-enhanced
 ## 📞 Soporte
 
 Para problemas o preguntas:
+
 1. Revisa la documentación completa en `README-ENHANCED.md`
 2. Abre un issue en GitHub
 3. Consulta la [documentación oficial de n8n](https://docs.n8n.io)
