@@ -22,12 +22,11 @@ COPY packages ./packages
 # Install pnpm
 RUN npm install -g pnpm@10.18.3
 
+# Remove prepare script that requires .git directory
+RUN sed -i '/"prepare":/d' package.json
+
 # Install dependencies and build
-# Disable prepare script (lefthook) which requires .git directory
-RUN echo "ignore-scripts=false" > .npmrc && \
-    echo "enable-pre-post-scripts=false" >> .npmrc && \
-    pnpm install --frozen-lockfile && \
-    rm .npmrc
+RUN pnpm install --frozen-lockfile
 RUN pnpm build
 
 # Production stage
