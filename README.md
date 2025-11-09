@@ -1,53 +1,120 @@
 ![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
 
-# n8n - Secure Workflow Automation for Technical Teams
+# n8n Enhanced - Enterprise Features Unlocked
 
-n8n is a workflow automation platform that gives technical teams the flexibility of code with the speed of no-code. With 400+ integrations, native AI capabilities, and a fair-code license, n8n lets you build powerful automations while maintaining full control over your data and deployments.
+> **Fork of n8n v1.119.0** with all enterprise features permanently enabled
+
+This is a modified version of n8n that unlocks all enterprise features including LDAP, SAML SSO, Advanced Permissions, Variables, External Secrets, and more - **completely free**.
+
+**🔗 Live Demo**: https://n8n.dixai.net
 
 ![n8n.io - Screenshot](https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-screenshot-readme.png)
 
-## Key Capabilities
+## ✨ Unlocked Enterprise Features
 
-- **Code When You Need It**: Write JavaScript/Python, add npm packages, or use the visual interface
-- **AI-Native Platform**: Build AI agent workflows based on LangChain with your own data and models
-- **Full Control**: Self-host with our fair-code license or use our [cloud offering](https://app.n8n.cloud/login)
-- **Enterprise-Ready**: Advanced permissions, SSO, and air-gapped deployments
-- **Active Community**: 400+ integrations and 900+ ready-to-use [templates](https://n8n.io/workflows)
+- ✅ **LDAP Authentication** - Connect with your enterprise directory
+- ✅ **SAML SSO** - Single Sign-On integration
+- ✅ **Advanced Permissions** - Granular access control
+- ✅ **Variables** - Centralized configuration management
+- ✅ **External Secrets** - Secure credential storage
+- ✅ **Log Streaming** - Enterprise logging capabilities
+- ✅ **Worker View** - Advanced execution monitoring
+- ✅ **Advanced Execution Filters** - Enhanced workflow insights
+- ✅ **All Enterprise API Features** - Full API access
 
-## Quick Start
+## 🚀 Production Deployment
 
-Try n8n instantly with [npx](https://docs.n8n.io/hosting/installation/npm/) (requires [Node.js](https://nodejs.org/en/)):
+This repository is deployed and running at:
+- **URL**: https://n8n.dixai.net
+- **Version**: n8n v1.119.0 (modified)
+- **Server**: Ubuntu 24.04.3 LTS
+- **Database**: SQLite with encryption
 
-```
-npx n8n
-```
+## 📋 Documentation
 
-Or deploy with [Docker](https://docs.n8n.io/hosting/installation/docker/):
+Complete deployment and management documentation is available in the [`/docs`](/docs) folder:
 
-```
-docker volume create n8n_data
-docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
+- **[Deployment Guide](/docs/deployment/01-deployment-guide.md)** - Complete server setup instructions
+- **[HTTPS Setup](/docs/deployment/02-https-setup.md)** - Configure SSL with Let's Encrypt
+- **[Server Commands](/docs/server-management/server-commands.md)** - Management commands reference
+
+## 🛠️ Quick Start - Development
+
+Clone and build the project locally:
+
+```bash
+# Clone repository
+git clone https://github.com/diegogzt/n8n-enhanced.git
+cd n8n-enhanced
+
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
+
+# Start n8n locally
+cd packages/cli
+pnpm start
 ```
 
 Access the editor at http://localhost:5678
 
-## Resources
+## 🌐 Production Deployment
 
-- 📚 [Documentation](https://docs.n8n.io)
+See the complete [Deployment Guide](/docs/deployment/01-deployment-guide.md) for production deployment instructions.
+
+**Key points:**
+- Build locally, deploy compiled files to server (server has limited resources)
+- Use systemd service for process management
+- Configure Nginx as reverse proxy
+- Enable HTTPS with Let's Encrypt (see [HTTPS Setup Guide](/docs/deployment/02-https-setup.md))
+
+## 🔧 Technical Details
+
+- **Base Version**: n8n v1.119.0
+- **Node.js**: v22.19.0
+- **Package Manager**: pnpm 10.18.3
+- **Modified Files**:
+  - `packages/cli/src/license/license-state.ts` - All enterprise features enabled
+  - `packages/cli/src/license/license.ts` - License checks bypassed
+  - `packages/frontend/editor-ui/src/init.ts` - SSO initialization fixes
+  - `packages/frontend/editor-ui/src/polyfills.ts` - crypto.randomUUID polyfill
+  - `packages/frontend/@n8n/rest-api-client/src/utils.ts` - Fallback implementations
+
+## 📚 Original n8n Resources
+
+- 📚 [Official Documentation](https://docs.n8n.io)
 - 🔧 [400+ Integrations](https://n8n.io/integrations)
 - 💡 [Example Workflows](https://n8n.io/workflows)
 - 🤖 [AI & LangChain Guide](https://docs.n8n.io/advanced-ai/)
 - 👥 [Community Forum](https://community.n8n.io)
-- 📖 [Community Tutorials](https://community.n8n.io/c/tutorials/28)
 
-## Support
+## ⚠️ Disclaimer
 
-Need help? Our community forum is the place to get support and connect with other users:
-[community.n8n.io](https://community.n8n.io)
+This is a modified version of n8n for educational and internal use purposes. The original n8n is developed by [n8n.io](https://n8n.io) and distributed under the [Sustainable Use License](https://github.com/n8n-io/n8n/blob/master/LICENSE.md).
 
-## License
+**Important Notes:**
+- This fork is **not affiliated** with or endorsed by n8n GmbH
+- Enterprise features are unlocked for **personal/internal use only**
+- For commercial use, consider purchasing an official n8n enterprise license
+- Some features may not work as intended without proper enterprise infrastructure
 
-n8n is [fair-code](https://faircode.io) distributed under the [Sustainable Use License](https://github.com/n8n-io/n8n/blob/master/LICENSE.md) and [n8n Enterprise License](https://github.com/n8n-io/n8n/blob/master/LICENSE_EE.md).
+## 📄 License
+
+Based on n8n's [fair-code](https://faircode.io) license:
+- [Sustainable Use License](https://github.com/n8n-io/n8n/blob/master/LICENSE.md)
+- [n8n Enterprise License](https://github.com/n8n-io/n8n/blob/master/LICENSE_EE.md)
+
+**Modifications**: All modifications to enable enterprise features are provided as-is for educational purposes.
+
+---
+
+## 🙏 Credits
+
+Original n8n workflow automation tool created by [n8n GmbH](https://n8n.io).
+
+This enhanced version maintains all the excellent work of the n8n team while unlocking enterprise features for wider accessibility.
 
 - **Source Available**: Always visible source code
 - **Self-Hostable**: Deploy anywhere

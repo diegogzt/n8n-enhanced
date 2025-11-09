@@ -1,3 +1,6 @@
+// Load polyfills FIRST before anything else
+import './polyfills';
+
 import { createApp } from 'vue';
 
 import '@vue-flow/core/dist/style.css';

@@ -10,7 +10,11 @@ import type { IRestApiContext } from './types';
 const getBrowserId = () => {
 	let browserId = localStorage.getItem(BROWSER_ID_STORAGE_KEY);
 	if (!browserId) {
-		browserId = crypto.randomUUID();
+		// Fallback for environments where crypto.randomUUID is not available
+		browserId =
+			crypto.randomUUID?.() ??
+			self.crypto?.randomUUID?.() ??
+			`${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
 		localStorage.setItem(BROWSER_ID_STORAGE_KEY, browserId);
 	}
 	return browserId;

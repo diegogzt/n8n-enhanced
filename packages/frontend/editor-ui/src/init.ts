@@ -1,4 +1,4 @@
-import SourceControlInitializationErrorMessage from '@/features/integrations/sourceControl.ee/components/SourceControlInitializationErrorMessage.vue';
+// Fallback component (real EE component may not be present in this build)
 import { useExternalHooks } from '@/app/composables/useExternalHooks';
 import { useTelemetry } from '@/app/composables/useTelemetry';
 import { useToast } from '@/app/composables/useToast';
@@ -29,6 +29,15 @@ import { useRootStore } from '@n8n/stores/useRootStore';
 import { h } from 'vue';
 import { useRolesStore } from '@/app/stores/roles.store';
 import { useDataTableStore } from '@/features/core/dataTable/dataTable.store';
+
+// Local fallback for SourceControlInitializationErrorMessage to avoid missing .vue import in non-EE builds.
+// This renders a simple message; the real EE component can be used when available.
+const SourceControlInitializationErrorMessage = {
+	name: 'SourceControlInitializationErrorMessage',
+	setup() {
+		return () => h('div', 'Failed to initialize source control');
+	},
+};
 
 export const state = {
 	initialized: false,
@@ -68,18 +77,22 @@ export async function initializeCore() {
 			type: 'error',
 			duration: 0,
 		});
+		return; // Don't continue initialization if settings failed to load
 	}
 
-	ssoStore.initialize({
-		authenticationMethod: settingsStore.userManagement
-			.authenticationMethod as UserManagementAuthenticationMethod,
-		config: settingsStore.settings.sso,
-		features: {
-			saml: settingsStore.isEnterpriseFeatureEnabled[EnterpriseEditionFeature.Saml],
-			ldap: settingsStore.isEnterpriseFeatureEnabled[EnterpriseEditionFeature.Ldap],
-			oidc: settingsStore.isEnterpriseFeatureEnabled[EnterpriseEditionFeature.Oidc],
-		},
-	});
+	// Only initialize SSO if settings are loaded
+	if (settingsStore.settings?.sso) {
+		ssoStore.initialize({
+			authenticationMethod: settingsStore.userManagement
+				.authenticationMethod as UserManagementAuthenticationMethod,
+			config: settingsStore.settings.sso,
+			features: {
+				saml: settingsStore.isEnterpriseFeatureEnabled[EnterpriseEditionFeature.Saml],
+				ldap: settingsStore.isEnterpriseFeatureEnabled[EnterpriseEditionFeature.Ldap],
+				oidc: settingsStore.isEnterpriseFeatureEnabled[EnterpriseEditionFeature.Oidc],
+			},
+		});
+	}
 
 	const banners: BannerName[] = [];
 	if (settingsStore.isEnterpriseFeatureEnabled.showNonProdBanner) {
