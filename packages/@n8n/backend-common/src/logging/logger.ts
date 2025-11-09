@@ -59,6 +59,8 @@ export class Logger implements LoggerType {
 
 			if (outputs.includes('console')) this.setConsoleTransport();
 			if (outputs.includes('file')) this.setFileTransport();
+			// ENHANCEMENT: Enable Datadog logging if API key is configured
+			this.setDatadogTransport();
 
 			this.scopes = new Set(scopes);
 		} else {
@@ -257,6 +259,27 @@ export class Logger implements LoggerType {
 				maxFiles: fileCountMax,
 			}),
 		);
+	}
+
+	private setDatadogTransport() {
+		// ENHANCEMENT: Support Datadog log streaming for Community Edition
+		if (!process.env.DATADOG_API_KEY) {
+			return;
+		}
+
+		// Create custom Datadog transport using HTTP API
+		const datadogTransport = new winston.transports.Http({
+			host: 'http-intake.logs.datadoghq.com',
+			path: `/v1/input/${process.env.DATADOG_API_KEY}`,
+			ssl: true,
+			format: winston.format.combine(
+				winston.format.timestamp(),
+				winston.format.metadata(),
+				winston.format.json(),
+			),
+		});
+
+		this.internalLogger.add(datadogTransport);
 	}
 
 	// #region Convenience methods

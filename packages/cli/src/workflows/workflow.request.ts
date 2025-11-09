@@ -72,4 +72,14 @@ export declare namespace WorkflowRequest {
 	type ManualRun = AuthenticatedRequest<{ workflowId: string }, {}, ManualRunPayload, {}>;
 
 	type Share = AuthenticatedRequest<{ workflowId: string }, {}, { shareWithIds: string[] }>;
+
+	type ShareWithUser = AuthenticatedRequest<
+		{ workflowId: string; targetUserId: string },
+		{},
+		{ role?: 'viewer' | 'editor' }
+	>;
+
+	type GetSharedWithMe = AuthenticatedRequest<{}, {}, {}, ListQuery.Params> & {
+		listQueryOptions: ListQuery.Options;
+	};
 }

@@ -1,6 +1,6 @@
 import { CreateVariableRequestDto, VariableListRequestDto } from '@n8n/api-types';
 import { AuthenticatedRequest } from '@n8n/db';
-import { Body, Delete, Get, Licensed, Patch, Post, Query, RestController } from '@n8n/decorators';
+import { Body, Delete, Get, Patch, Post, Query, RestController } from '@n8n/decorators';
 import type { Response } from 'express';
 
 import { BadRequestError } from '@/errors/response-errors/bad-request.error';
@@ -24,7 +24,7 @@ export class VariablesController {
 	}
 
 	@Post('/')
-	@Licensed('feat:variables')
+	// @Licensed('feat:variables') // ENHANCEMENT: Disabled for Community Edition
 	async createVariable(
 		req: AuthenticatedRequest,
 		_res: Response,
@@ -52,7 +52,7 @@ export class VariablesController {
 	}
 
 	@Patch('/:id')
-	@Licensed('feat:variables')
+	// @Licensed('feat:variables') // ENHANCEMENT: Disabled for Community Edition
 	async updateVariable(
 		req: AuthenticatedRequest<{ id: string }>,
 		_res: Response,

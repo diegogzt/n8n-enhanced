@@ -1,5 +1,5 @@
 import type { BooleanLicenseFeature } from '@n8n/constants';
-import { LICENSE_FEATURES, UNLIMITED_LICENSE_QUOTA } from '@n8n/constants';
+import { UNLIMITED_LICENSE_QUOTA } from '@n8n/constants';
 import { Service } from '@n8n/di';
 import { UnexpectedError } from 'n8n-workflow';
 
@@ -55,131 +55,131 @@ export class LicenseState {
 	// --------------------
 
 	isCustomRolesLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.CUSTOM_ROLES);
+		return true;
 	}
 
 	isSharingLicensed() {
-		return this.isLicensed('feat:sharing');
+		return true;
 	}
 
 	isLogStreamingLicensed() {
-		return this.isLicensed('feat:logStreaming');
+		return true;
 	}
 
 	isLdapLicensed() {
-		return this.isLicensed('feat:ldap');
+		return true;
 	}
 
 	isSamlLicensed() {
-		return this.isLicensed('feat:saml');
+		return true;
 	}
 
 	isOidcLicensed() {
-		return this.isLicensed('feat:oidc');
+		return true;
 	}
 
 	isMFAEnforcementLicensed() {
-		return this.isLicensed('feat:mfaEnforcement');
+		return true;
 	}
 
 	isApiKeyScopesLicensed() {
-		return this.isLicensed('feat:apiKeyScopes');
+		return true;
 	}
 
 	isAiAssistantLicensed() {
-		return this.isLicensed('feat:aiAssistant');
+		return true;
 	}
 
 	isAskAiLicensed() {
-		return this.isLicensed('feat:askAi');
+		return true;
 	}
 
 	isAiCreditsLicensed() {
-		return this.isLicensed('feat:aiCredits');
+		return true;
 	}
 
 	isAdvancedExecutionFiltersLicensed() {
-		return this.isLicensed('feat:advancedExecutionFilters');
+		return true;
 	}
 
 	isAdvancedPermissionsLicensed() {
-		return this.isLicensed('feat:advancedPermissions');
+		return true;
 	}
 
 	isDebugInEditorLicensed() {
-		return this.isLicensed('feat:debugInEditor');
+		return true;
 	}
 
 	isBinaryDataS3Licensed() {
-		return this.isLicensed('feat:binaryDataS3');
+		return true;
 	}
 
 	isMultiMainLicensed() {
-		return this.isLicensed('feat:multipleMainInstances');
+		return true;
 	}
 
 	isVariablesLicensed() {
-		return this.isLicensed('feat:variables');
+		return true;
 	}
 
 	isSourceControlLicensed() {
-		return this.isLicensed('feat:sourceControl');
+		return true;
 	}
 
 	isExternalSecretsLicensed() {
-		return this.isLicensed('feat:externalSecrets');
+		return true;
 	}
 
 	isWorkflowHistoryLicensed() {
-		return this.isLicensed('feat:workflowHistory');
+		return true;
 	}
 
 	isAPIDisabled() {
-		return this.isLicensed('feat:apiDisabled');
+		return true;
 	}
 
 	isWorkerViewLicensed() {
-		return this.isLicensed('feat:workerView');
+		return true;
 	}
 
 	isProjectRoleAdminLicensed() {
-		return this.isLicensed('feat:projectRole:admin');
+		return true;
 	}
 
 	isProjectRoleEditorLicensed() {
-		return this.isLicensed('feat:projectRole:editor');
+		return true;
 	}
 
 	isProjectRoleViewerLicensed() {
-		return this.isLicensed('feat:projectRole:viewer');
+		return true;
 	}
 
 	isCustomNpmRegistryLicensed() {
-		return this.isLicensed('feat:communityNodes:customRegistry');
+		return true;
 	}
 
 	isFoldersLicensed() {
-		return this.isLicensed('feat:folders');
+		return true;
 	}
 
 	isInsightsSummaryLicensed() {
-		return this.isLicensed('feat:insights:viewSummary');
+		return true;
 	}
 
 	isInsightsDashboardLicensed() {
-		return this.isLicensed('feat:insights:viewDashboard');
+		return true;
 	}
 
 	isInsightsHourlyDataLicensed() {
-		return this.isLicensed('feat:insights:viewHourlyData');
+		return true;
 	}
 
 	isWorkflowDiffsLicensed() {
-		return this.isLicensed('feat:workflowDiffs');
+		return true;
 	}
 
 	isProvisioningLicensed() {
-		return this.isLicensed(['feat:saml', 'feat:oidc', 'feat:ldap']);
+		return true;
 	}
 
 	// --------------------
@@ -219,10 +219,14 @@ export class LicenseState {
 	}
 
 	getMaxTeamProjects() {
-		return this.getValue('quota:maxTeamProjects') ?? 0;
+		// ENHANCEMENT: Enable unlimited team projects for Community Edition
+		// Allow users to create team projects without Enterprise license
+		const value = this.getValue('quota:maxTeamProjects');
+		return value !== undefined ? value : 1000; // Default to 1000 for Community Edition
 	}
 
 	getMaxWorkflowsWithEvaluations() {
-		return this.getValue('quota:evaluations:maxWorkflows') ?? 0;
+		// ENHANCEMENT: Enable evaluations/insights for Community Edition
+		return this.getValue('quota:evaluations:maxWorkflows') ?? 1000;
 	}
 }

@@ -54,6 +54,7 @@ import '@/controllers/user-settings.controller';
 import '@/controllers/workflow-statistics.controller';
 import '@/controllers/api-keys.controller';
 import '@/credentials/credentials.controller';
+import '@/controllers/enhancements.controller';
 import '@/eventbus/event-bus.controller';
 import '@/events/events.controller';
 import '@/executions/executions.controller';

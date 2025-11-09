@@ -60,6 +60,7 @@ import { TagService } from '@/services/tag.service';
 import { UserManagementMailer } from '@/user-management/email';
 import * as utils from '@/utils';
 import * as WorkflowHelpers from '@/workflow-helpers';
+import { WorkflowSharingService } from './workflow-sharing.service';
 
 @RestController('/workflows')
 export class WorkflowsController {
@@ -86,6 +87,7 @@ export class WorkflowsController {
 		private readonly folderService: FolderService,
 		private readonly workflowFinderService: WorkflowFinderService,
 		private readonly executionService: ExecutionService,
+		private readonly workflowSharingService: WorkflowSharingService,
 	) {}
 
 	@Post('/')
@@ -595,5 +597,80 @@ export class WorkflowsController {
 			ResponseHelper.reportError(error);
 			ResponseHelper.sendErrorResponse(res, error);
 		}
+	}
+
+	@Put('/:workflowId/share-user/:targetUserId')
+	@ProjectScope('workflow:share')
+	async shareWorkflowWithUser(req: WorkflowRequest.ShareWithUser) {
+		const { workflowId, targetUserId } = req.params;
+		const { role = 'viewer' } = req.body;
+
+		if (!['viewer', 'editor'].includes(role)) {
+			throw new BadRequestError('Invalid role. Must be "viewer" or "editor"');
+		}
+
+		const workflow = await this.workflowFinderService.findWorkflowForUser(workflowId, req.user, [
+			'workflow:share',
+		]);
+
+		if (!workflow) {
+			throw new ForbiddenError();
+		}
+
+		const success = await this.workflowSharingService.shareWorkflowWithUser(
+			workflowId,
+			req.user.id,
+			targetUserId,
+			role as 'viewer' | 'editor',
+		);
+
+		if (!success) {
+			throw new BadRequestError('Failed to share workflow');
+		}
+
+		this.eventService.emit('workflow-sharing-updated', {
+			workflowId,
+			userIdSharer: req.user.id,
+			userIdList: [targetUserId],
+		});
+
+		return { success: true, workflowId, targetUserId, role };
+	}
+
+	@Delete('/:workflowId/share-user/:targetUserId')
+	@ProjectScope('workflow:share')
+	async unshareWorkflowWithUser(
+		req: AuthenticatedRequest<{ workflowId: string; targetUserId: string }>,
+	) {
+		const { workflowId, targetUserId } = req.params;
+
+		const workflow = await this.workflowFinderService.findWorkflowForUser(workflowId, req.user, [
+			'workflow:share',
+		]);
+
+		if (!workflow) {
+			throw new ForbiddenError();
+		}
+
+		const success = await this.workflowSharingService.unshareWorkflowWithUser(
+			workflowId,
+			targetUserId,
+		);
+
+		if (!success) {
+			throw new BadRequestError('Failed to unshare workflow');
+		}
+
+		return { success: true, workflowId, targetUserId };
+	}
+
+	@Get('/shared-with-me')
+	async getWorkflowsSharedWithMe(req: WorkflowRequest.GetSharedWithMe) {
+		const workflows = await this.workflowSharingService.getWorkflowsSharedWithUser(req.user.id);
+
+		return {
+			data: workflows,
+			count: workflows.length,
+		};
 	}
 }

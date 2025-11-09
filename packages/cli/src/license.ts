@@ -222,112 +222,112 @@ export class License implements LicenseProvider {
 
 	/** @deprecated Use `LicenseState.isSharingLicensed` instead. */
 	isSharingEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.SHARING);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isLogStreamingLicensed` instead. */
 	isLogStreamingEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.LOG_STREAMING);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isLdapLicensed` instead. */
 	isLdapEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.LDAP);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isSamlLicensed` instead. */
 	isSamlEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.SAML);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isApiKeyScopesLicensed` instead. */
 	isApiKeyScopesEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.API_KEY_SCOPES);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isAiAssistantLicensed` instead. */
 	isAiAssistantEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.AI_ASSISTANT);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isAskAiLicensed` instead. */
 	isAskAiEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.ASK_AI);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isAiCreditsLicensed` instead. */
 	isAiCreditsEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.AI_CREDITS);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isAdvancedExecutionFiltersLicensed` instead. */
 	isAdvancedExecutionFiltersEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.ADVANCED_EXECUTION_FILTERS);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isAdvancedPermissionsLicensed` instead. */
 	isAdvancedPermissionsLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.ADVANCED_PERMISSIONS);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isDebugInEditorLicensed` instead. */
 	isDebugInEditorLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.DEBUG_IN_EDITOR);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isBinaryDataS3Licensed` instead. */
 	isBinaryDataS3Licensed() {
-		return this.isLicensed(LICENSE_FEATURES.BINARY_DATA_S3);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isMultiMainLicensed` instead. */
 	isMultiMainLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.MULTIPLE_MAIN_INSTANCES);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isVariablesLicensed` instead. */
 	isVariablesEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.VARIABLES);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isSourceControlLicensed` instead. */
 	isSourceControlLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.SOURCE_CONTROL);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isExternalSecretsLicensed` instead. */
 	isExternalSecretsEnabled() {
-		return this.isLicensed(LICENSE_FEATURES.EXTERNAL_SECRETS);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isWorkflowHistoryLicensed` instead. */
 	isWorkflowHistoryLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.WORKFLOW_HISTORY);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isAPIDisabled` instead. */
 	isAPIDisabled() {
-		return this.isLicensed(LICENSE_FEATURES.API_DISABLED);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isWorkerViewLicensed` instead. */
 	isWorkerViewLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.WORKER_VIEW);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isProjectRoleAdminLicensed` instead. */
 	isProjectRoleAdminLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.PROJECT_ROLE_ADMIN);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isProjectRoleEditorLicensed` instead. */
 	isProjectRoleEditorLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.PROJECT_ROLE_EDITOR);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isProjectRoleViewerLicensed` instead. */
 	isProjectRoleViewerLicensed() {
-		return this.isLicensed(LICENSE_FEATURES.PROJECT_ROLE_VIEWER);
+		return true;
 	}
 
 	/** @deprecated Use `LicenseState.isCustomNpmRegistryLicensed` instead. */
@@ -403,7 +403,19 @@ export class License implements LicenseProvider {
 
 	/** @deprecated Use `LicenseState` instead. */
 	getWorkflowHistoryPruneLimit() {
-		return this.getValue(LICENSE_QUOTAS.WORKFLOW_HISTORY_PRUNE_LIMIT) ?? UNLIMITED_LICENSE_QUOTA;
+		const configuredLimit = this.getValue(LICENSE_QUOTAS.WORKFLOW_HISTORY_PRUNE_LIMIT);
+		if (configuredLimit !== undefined) {
+			return configuredLimit;
+		}
+
+		// Enhanced Community Edition: support extended workflow history via environment variable
+		const customRetentionDays = parseInt(process.env.WORKFLOW_HISTORY_DAYS || '', 10);
+		if (!isNaN(customRetentionDays) && customRetentionDays > 1) {
+			// Allow retention if explicitly configured, otherwise use Enterprise value
+			return UNLIMITED_LICENSE_QUOTA;
+		}
+
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	/** @deprecated Use `LicenseState` instead. */

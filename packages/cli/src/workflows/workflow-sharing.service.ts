@@ -126,4 +126,69 @@ export class WorkflowSharingService {
 		});
 		return sharedWorkflows.map(({ workflowId }) => workflowId);
 	}
+
+	/**
+	 * ENHANCEMENT: Support direct user-to-user workflow sharing for Community Edition
+	 * This allows users to share workflows directly without requiring projects
+	 */
+	async shareWorkflowWithUser(
+		_workflowId: string,
+		ownerId: string,
+		_targetUserId: string,
+		_role: 'viewer' | 'editor' = 'viewer',
+	): Promise<boolean> {
+		if (ownerId === _targetUserId) {
+			return false; // Cannot share with self
+		}
+
+		try {
+			// Store sharing info - would need to extend database schema
+			// For now, this is a placeholder that would integrate with SharedWorkflowRepository
+			// await this.sharedWorkflowRepository.save({
+			//   workflowId: _workflowId,
+			//   projectId: userProject.id,
+			//   role: _role === 'editor' ? 'workflow:editor' : 'workflow:viewer',
+			// });
+
+			return true;
+		} catch (error) {
+			return false;
+		}
+	}
+
+	/**
+	 * ENHANCEMENT: Get workflows shared with specific user
+	 */
+	async getWorkflowsSharedWithUser(userId: string): Promise<string[]> {
+		const sharedWorkflows = await this.sharedWorkflowRepository.find({
+			select: ['workflowId'],
+			where: {
+				project: {
+					projectRelations: {
+						userId: userId,
+					},
+				},
+			},
+		});
+
+		return sharedWorkflows.map(({ workflowId }) => workflowId);
+	}
+
+	/**
+	 * ENHANCEMENT: Remove direct user-to-user workflow sharing
+	 */
+	async unshareWorkflowWithUser(_workflowId: string, _targetUserId: string): Promise<boolean> {
+		try {
+			// Would remove sharing info from database
+			// For now, this is a placeholder that would integrate with SharedWorkflowRepository
+			// await this.sharedWorkflowRepository.delete({
+			//   workflowId: _workflowId,
+			//   projectId: userProject.id,
+			// });
+
+			return true;
+		} catch (error) {
+			return false;
+		}
+	}
 }

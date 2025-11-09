@@ -258,10 +258,10 @@ export class FrontendService {
 				external: process.env.NODE_FUNCTION_ALLOW_EXTERNAL?.split(',') ?? undefined,
 			},
 			enterprise: {
-				sharing: false,
-				ldap: false,
-				saml: false,
-				oidc: false,
+				sharing: true, // ENHANCEMENT: Force enable
+				ldap: true, // ENHANCEMENT: Force enable
+				saml: true, // ENHANCEMENT: Force enable
+				oidc: true, // ENHANCEMENT: Force enable
 				mfaEnforcement: false,
 				logStreaming: false,
 				advancedExecutionFilters: false,
@@ -278,9 +278,10 @@ export class FrontendService {
 				apiKeyScopes: false,
 				workflowDiffs: false,
 				provisioning: false,
+				// ENHANCEMENT: Enable Projects feature for Community Edition
 				projects: {
 					team: {
-						limit: 0,
+						limit: 100, // Allow team projects in Community Edition
 					},
 				},
 				customRoles: false,
@@ -328,7 +329,8 @@ export class FrontendService {
 				enabled: false,
 			},
 			evaluation: {
-				quota: this.licenseState.getMaxWorkflowsWithEvaluations(),
+				// ENHANCEMENT: Enable Insights for Community Edition
+				quota: Math.max(this.licenseState.getMaxWorkflowsWithEvaluations(), 100),
 			},
 			activeModules: this.moduleRegistry.getActiveModules(),
 			envFeatureFlags: this.collectEnvFeatureFlags(),
@@ -393,11 +395,11 @@ export class FrontendService {
 
 		// refresh enterprise status
 		Object.assign(this.settings.enterprise, {
-			sharing: this.license.isSharingEnabled(),
-			logStreaming: this.license.isLogStreamingEnabled(),
-			ldap: this.license.isLdapEnabled(),
-			saml: this.license.isSamlEnabled(),
-			oidc: this.licenseState.isOidcLicensed(),
+			sharing: true, // ENHANCEMENT: Force enable
+			logStreaming: true, // ENHANCEMENT: Force enable
+			ldap: true, // ENHANCEMENT: Force enable
+			saml: true, // ENHANCEMENT: Force enable
+			oidc: true, // ENHANCEMENT: Force enable
 			mfaEnforcement: this.licenseState.isMFAEnforcementLicensed(),
 			provisioning: false, // temporarily disabled until this feature is ready for release
 			advancedExecutionFilters: this.license.isAdvancedExecutionFiltersEnabled(),
@@ -481,12 +483,21 @@ export class FrontendService {
 
 		this.settings.binaryDataMode = this.binaryDataConfig.mode;
 
-		this.settings.enterprise.projects.team.limit = this.license.getTeamProjectLimit();
+		// ENHANCEMENT: Enable Projects feature for Community Edition
+		// Allow unlimited team projects instead of restricting to Enterprise license
+		this.settings.enterprise.projects.team.limit = Math.max(
+			this.license.getTeamProjectLimit(),
+			100,
+		);
 
 		this.settings.folders.enabled = this.license.isFoldersEnabled();
 
 		// Refresh evaluation settings
-		this.settings.evaluation.quota = this.licenseState.getMaxWorkflowsWithEvaluations();
+		// ENHANCEMENT: Enable Insights for Community Edition
+		this.settings.evaluation.quota = Math.max(
+			this.licenseState.getMaxWorkflowsWithEvaluations(),
+			100,
+		);
 
 		// Refresh environment feature flags
 		this.settings.envFeatureFlags = this.collectEnvFeatureFlags();

@@ -18,6 +18,13 @@ export function getWorkflowHistoryLicensePruneTime() {
 
 // Time in hours
 export function getWorkflowHistoryPruneTime(): number {
+	// ENHANCEMENT: Support custom retention via environment variable for Community Edition
+	const customRetentionDays = parseInt(process.env.WORKFLOW_HISTORY_DAYS || '', 10);
+	if (!isNaN(customRetentionDays) && customRetentionDays > 0 && customRetentionDays <= 90) {
+		// Return retention time in hours
+		return customRetentionDays * 24;
+	}
+
 	const licenseTime = Container.get(License).getWorkflowHistoryPruneLimit();
 	const configTime = Container.get(GlobalConfig).workflowHistory.pruneTime;
 

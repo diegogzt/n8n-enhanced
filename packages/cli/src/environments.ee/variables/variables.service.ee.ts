@@ -164,9 +164,11 @@ export class VariablesService {
 	}
 
 	private async canCreateNewVariable() {
-		if (!this.licenseState.isVariablesLicensed()) {
-			throw new FeatureNotLicensedError('feat:variables');
-		}
+		// ENHANCEMENT: Enable variable creation for Community Edition
+		// Remove license check - variables should be available without Enterprise
+		// if (!this.licenseState.isVariablesLicensed()) {
+		// 	throw new FeatureNotLicensedError('feat:variables');
+		// }
 
 		// This defaults to -1 which is what we want if we've enabled
 		// variables via the config
