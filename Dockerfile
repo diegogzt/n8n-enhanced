@@ -34,8 +34,9 @@ RUN apk add --no-cache \
     tzdata \
     ca-certificates
 
-# Create n8n user
-RUN addgroup -g 1000 n8n && \
+# Create n8n user (use existing node user to avoid GID conflicts)
+RUN deluser --remove-home node && \
+    addgroup -g 1000 n8n && \
     adduser -D -u 1000 -G n8n n8n
 
 WORKDIR /home/n8n
