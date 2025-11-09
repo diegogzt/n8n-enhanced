@@ -23,7 +23,7 @@ COPY packages ./packages
 RUN npm install -g pnpm@10.18.3
 
 # Install dependencies and build
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
 RUN pnpm build
 
 # Production stage
