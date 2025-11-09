@@ -22,8 +22,8 @@ COPY packages ./packages
 # Install pnpm
 RUN npm install -g pnpm@10.18.3
 
-# Remove prepare script that requires .git directory
-RUN sed -i '/"prepare":/d' package.json
+# Remove prepare and preinstall scripts that cause issues in Docker
+RUN sed -i '/"prepare":/d; /"preinstall":/d' package.json
 
 # Install dependencies and build
 RUN pnpm install --frozen-lockfile
