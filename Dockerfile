@@ -1,7 +1,7 @@
 # n8n Enhanced Edition - Dockerfile
 # All Enterprise features unlocked for Community Edition
 
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache \
@@ -18,14 +18,14 @@ COPY turbo.json ./
 COPY packages ./packages
 
 # Install pnpm
-RUN npm install -g pnpm@9.9.0
+RUN npm install -g pnpm@10.18.3
 
 # Install dependencies and build
 RUN pnpm install --frozen-lockfile
 RUN pnpm build
 
 # Production stage
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Install runtime dependencies
 RUN apk add --no-cache \
@@ -45,7 +45,7 @@ WORKDIR /home/n8n
 COPY --from=builder --chown=n8n:n8n /app /home/n8n
 
 # Install pnpm
-RUN npm install -g pnpm@9.9.0
+RUN npm install -g pnpm@10.18.3
 
 # Set environment variables
 ENV NODE_ENV=production \
