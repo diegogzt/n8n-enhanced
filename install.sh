@@ -106,7 +106,7 @@ clone_repository() {
     fi
     
     # Replace with your repository URL
-    local repo_url="https://github.com/yourusername/n8n-enhanced.git"
+    local repo_url="https://github.com/diegogzt/n8n-enhanced.git"
     
     read -p "Enter repository URL (default: $repo_url): " custom_url
     if [ ! -z "$custom_url" ]; then
